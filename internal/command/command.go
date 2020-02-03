@@ -8,40 +8,54 @@ import (
 type command interface {
 	Execute()
 }
-
 type receiver interface {
 	Action(text string) string
 }
 
 type toUpperCmd struct {
-	text     string
-	receiver upperStringReceiver
+	otext     string
+	oreceiver receiver
 }
 
-type upperStringReceiver string
+func (cmd *toUpperCmd) Execute() {
+	cmd.otext = cmd.oreceiver.Action(cmd.otext)
+}
+
+type toLowerCmd struct {
+	otext     string
+	oreceiver receiver
+}
+
+func (cmd *toLowerCmd) Execute() {
+	cmd.otext = cmd.oreceiver.Action(cmd.otext)
+}
+
+type upperStringReceiver struct {
+}
 
 func (receiver upperStringReceiver) Action(text string) string {
 	return strings.ToUpper(text)
 }
 
-func (cmd toUpperCmd) Execute() {
-	cmd.text = cmd.receiver.Action(cmd.text)
+type lowerStringReceiver struct {
 }
 
-// type toLowerCmd struct {
-// 	text string
-// }
+func (receiver lowerStringReceiver) Action(text string) string {
+	return strings.ToLower(text)
+}
 
-// type (cmd ToLowerCmd) Execute() {
-// 	text = ToLower(text)
-// }
-
-// Pprint test
-func Pprint() {
+// TestPattern test pattern
+func TestPattern() {
 	fmt.Println("command package")
 
-	receiver := upperStringReceiver(" ")
-	testUpperCmd := toUpperCmd{"abcdefg", receiver}
+	var upperReceiver upperStringReceiver
+	testUpperCmd := &toUpperCmd{"UPPER string", upperReceiver}
+
+	var lowerReceiver lowerStringReceiver
+	testLowerCmd := &toLowerCmd{"LOWER string", lowerReceiver}
+
 	testUpperCmd.Execute()
-	fmt.Println(testUpperCmd.text)
+	testLowerCmd.Execute()
+	fmt.Println(testUpperCmd.otext)
+	fmt.Println(testLowerCmd.otext)
 }

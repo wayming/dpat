@@ -1,7 +1,11 @@
 package main
 
-import "github.com/wayming/dpat/internal/command"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
-	command.TestPattern()
+	time.Sleep(3000 * time.Millisecond)
+	fmt.Println("main terminated")
 }
